@@ -1,0 +1,100 @@
+private void MoveText(GridPane g,Text t,coordinate c,int step) {
+		for (int i=1;i<=step;++i) {
+			c.next();
+		}
+		g.getChildren().remove(t);
+		GridPane temp=(GridPane) g.getChildren().get(c.position);
+		VBox temp2=(VBox) temp.getChildren().get(0);
+		temp2.getChildren().add(t);
+		}
+	
+	private void ShowRank(VBox v,int max,int middle,int min) {
+		v.getChildren().clear();
+		Text t1=new Text(max+"号玩家");
+		Text t2=new Text(middle+"号玩家");
+		Text t3=new Text(min+"号玩家");
+		v.getChildren().addAll(t1,t2,t3);
+	}
+
+	public void GetPointAndUpdate() {
+		int pointnumber=Die.getInstance().throwdie();
+		tf2.setText(String.valueOf(pointnumber));
+		tf1.setText(String.valueOf((turn%3)+1));
+		tf3.setText(String.valueOf(((turn+1)%3)+1));
+		turn+=1;
+		
+		switch (tf1.getText()) {
+			case "1":
+				MoveText(gp1,one,co1, pointnumber);
+				System.out.println("1号玩家前进"+pointnumber+"步！");
+				tf7.setText(String.valueOf((Integer.parseInt(tf7.getText())+pointnumber)));
+				if (co1.position<pointnumber) {
+					tf4.setText(String.valueOf((Integer.parseInt(tf4.getText())+1)));
+					System.out.println("1号玩家已完成第"+tf4.getText()+"圈！");
+				}
+				break;
+			case "2":
+				MoveText(gp1,two,co2, pointnumber);
+				System.out.println("2号玩家前进"+pointnumber+"步！");
+				tf8.setText(String.valueOf((Integer.parseInt(tf8.getText())+pointnumber)));
+				if (co2.position<pointnumber) {
+					tf5.setText(String.valueOf((Integer.parseInt(tf5.getText())+1)));
+					System.out.println("2号玩家已完成第"+tf5.getText()+"圈！");
+				}
+				break;
+			case "3":
+				MoveText(gp1,three,co3, pointnumber);
+				System.out.println("3号玩家前进"+pointnumber+"步！");
+				tf9.setText(String.valueOf((Integer.parseInt(tf9.getText())+pointnumber)));
+				if (co3.position<pointnumber) {
+					tf6.setText(String.valueOf((Integer.parseInt(tf6.getText())+1)));
+					System.out.println("3号玩家已完成第"+tf6.getText()+"圈！");
+				}
+		}
+		
+		if (Integer.parseInt(tf7.getText())<Integer.parseInt(tf8.getText())) {
+			if (Integer.parseInt(tf7.getText())<Integer.parseInt(tf9.getText())) {
+				if (Integer.parseInt(tf8.getText())<Integer.parseInt(tf9.getText())) ShowRank(vb1,3,2,1);
+				else ShowRank(vb1,2,3,1);
+			}
+			else ShowRank(vb1,2,1,3);
+		}
+		else {
+			if (Integer.parseInt(tf7.getText())<Integer.parseInt(tf9.getText())) ShowRank(vb1,3,1,2);
+			else {
+				if (Integer.parseInt(tf8.getText())<Integer.parseInt(tf9.getText())) ShowRank(vb1,1,3,2);
+				else ShowRank(vb1,1,2,3);
+			}
+		}
+	}
+}
+
+public class coordinate {
+	public int x;
+	public int y;
+	public int position;
+	
+	public coordinate() {
+		x=0;
+		y=0;
+		position=0;
+	}
+	
+	public void next() {
+		position=(position+1)%36;
+		switch (y) {
+			case 0:
+				if (x!=9) x++;
+				else y++;
+				break;
+			case 9:
+				if (x!=0) x--;
+				else y--;
+				break;
+			default:
+				if (x==0) y--;
+				else y++;
+		}
+				
+	}
+}
